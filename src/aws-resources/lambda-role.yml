@@ -1,0 +1,32 @@
+---
+Resources:
+  lambdaRole:
+    Type: AWS::IAM::Role
+    # Role depends on dynamodb resource. Please refer dynamodb-table.yml
+    DependsOn:
+      - exampleTable
+    Properties:
+      Path: /lambda-role/
+      RoleName: ${self:provider.stage}-${self:custom.service.name}-lambda-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+      Policies:
+        - PolicyName: ${self:provider.stage}-${self:custom.service.name}-dynamodb-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:*
+                # Role depends on dynamodb resource. Please refer dynamodb-table.yml
+                Resource:
+                  - !GetAtt exampleTable.Arn

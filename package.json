@@ -1,0 +1,33 @@
+{
+  "name": "serverless-graphql-boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate code for Apollo graphql server 2.0 with serverless and aws services",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "serverless",
+    "graphql",
+    "apollo-graphql",
+    "aws",
+    "boilerplate"
+  ],
+  "author": "Rishikesh Darandale",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless": "^1.38.0",
+    "serverless-dynamodb-local": "^0.2.35",
+    "serverless-offline": "^4.9.0",
+    "serverless-webpack": "^5.2.0",
+    "webpack": "^4.29.6",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "dependencies": {
+    "apollo-server-lambda": "^2.4.8",
+    "aws-sdk": "^2.419.0",
+    "graphql": "^14.1.1",
+    "lambda-log": "^2.1.0",
+    "lodash": "^4.17.11"
+  }
+}

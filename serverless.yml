@@ -1,0 +1,128 @@
+# Update your service name here
+service: &service
+  name: serverless-graphql-boilerplate
+
+frameworkVersion: ">=1.0.0 <2.0.0"
+
+# plugins
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline
+
+custom:
+  service: *service
+  stages:
+    - local
+    - development
+    - production
+  # default stage/environment
+  defaultStage: local
+  # default AWS region
+  defaultRegion: us-east-1
+  # config file / region / stage
+  configFile: ${file(./config/${opt:region,self:provider.region}/${self:provider.stage}.yml)}
+  # webpack config
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules:
+      forceExclude:
+        - aws-sdk
+  # dynamodb local config
+  # https://github.com/99xt/serverless-dynamodb-local
+  dynamodb:
+    # only in local
+    stages:
+      - local
+    start:
+      port: 8000
+      inMemory: true
+      # create the table after each restart
+      migrate: true
+      # seed the data as well
+      seed: true
+    seed:
+      test:
+        sources:
+          - table: ${self:provider.stage}-example-table
+            sources: [./seed/example.json]
+
+# package
+package:
+  individually: true
+
+# aws provider
+provider:
+  name: aws
+  # common runtime for all functions
+  runtime: nodejs8.10
+  # cloudformation stack name
+  stackName: ${self:provider.stage}-${self:custom.service.name}-stack
+  # API gateway Name
+  apiName: ${self:provider.stage}-${self:custom.service.name}-api
+  # Deployment bucket name
+  # This bucket will created using terraform
+  # see {AWS_ACCOUNT}/common/deployable-package-store/{REGION}
+  deploymentBucket:
+    name: ${self:custom.configFile.serverless.deploymentBucket}
+  # The S3 prefix under which deployed artifacts should be stored.
+  deploymentPrefix: ${self:provider.stage}/serverless
+  # stage/environment (development|testing|staging|production) default is development
+  stage: ${opt:stage, self:custom.defaultStage}
+  # aws region
+  region: ${opt:region, self:custom.defaultRegion}
+  # aws profiles
+  profile: ${self:custom.configFile.aws.profile}
+  # AWS lambda configuration
+  # common memory size for all functions
+  memorySize: 128
+  # common timeout for all functions
+  timeout: 30
+  # lambda role
+  # This will be created using cloudformation
+  # see resources section
+  role: lambdaRole
+  # Environment variables to AWS lambda (global)
+  environment:
+    ENVIRONMENT: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    DEBUG_ENABLED: ${self:custom.configFile.debug.enabled}
+    DYNAMODB_LOCAL_ENDPOINT: http://localhost:${self:custom.dynamodb.start.port}
+  # AWS cloudwatch configuration
+  logRetentionInDays: 14
+  # VPC configuration for lambda
+  vpc: ${self:custom.configFile.aws.vpc}
+  # Tagging
+  stackTags:
+    Environment: ${self:provider.stage}
+    Project: ${self:custom.service.name}
+  # Common Tags for AWS lambda functions
+  tags:
+    Environment: ${self:provider.stage}
+    Project: ${self:custom.service.name}
+
+# functions
+functions:
+  graphql:
+    handler: functions/graphql.handler
+    name: ${self:provider.stage}-${self:custom.service.name}-function
+    description: ${self:custom.service.name} - Apollo graphql server (${self:provider.stage})
+    tags:
+      Name: ${self:provider.stage}-${self:custom.service.name}-function
+    events:
+    - http:
+        path: graphql
+        method: post
+        cors: true
+    - http:
+        path: graphql
+        method: get
+        cors: true
+
+# AWS resources used in this stack apart from functions
+# These resources will be part cloudformation stack
+resources:
+  # dynamodb table
+  - ${file(src/aws-resources/dynamodb-table.yml)}
+  # Lambda Role
+  - ${file(src/aws-resources/lambda-role.yml)}

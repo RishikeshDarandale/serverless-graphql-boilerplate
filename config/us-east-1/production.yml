@@ -1,0 +1,20 @@
+#TODO: Update the production environment specific configuration here
+# AWS
+aws:
+  # aws-cli profile
+  profile: production-profile
+  # VPC configuration
+  vpc:
+    securityGroupIds:
+      - dummy-group
+    subnetIds:
+      - dummy-subnet-1
+      - dummy-subnet-2
+
+# serverless deployment bucket
+serverless:
+  deploymentBucket: dummy-bucket
+
+# Debug log enabled
+debug:
+  enabled: true

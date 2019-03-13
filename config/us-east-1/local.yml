@@ -1,0 +1,19 @@
+# AWS
+aws:
+  # aws-cli profile
+  profile: dummy-profile
+  # VPC configuration
+  vpc:
+    securityGroupIds:
+      - dummy-group
+    subnetIds:
+      - dummy-subnet-1
+      - dummy-subnet-2
+
+# serverless deployment bucket
+serverless:
+  deploymentBucket: dummy-bucket
+
+# Debug log enabled
+debug:
+  enabled: true
