@@ -27,7 +27,7 @@
     "apollo-server-lambda": "^2.4.8",
     "aws-sdk": "^2.424.0",
     "graphql": "^14.1.1",
-    "lambda-log": "^2.1.0",
+    "lambda-log": "^2.2.0",
     "lodash": "^4.17.11"
   }
 }
