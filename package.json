@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "apollo-server-lambda": "^2.6.2",
-    "aws-sdk": "^2.471.0",
+    "aws-sdk": "^2.473.0",
     "graphql": "^14.3.1",
     "lambda-log": "^2.2.0",
     "lodash": "^4.17.11"
