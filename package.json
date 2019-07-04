@@ -4,7 +4,9 @@
   "description": "A boilerplate code for Apollo graphql server 2.0 with serverless and aws services",
   "main": "webpack.config.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [
     "serverless",
@@ -28,6 +30,8 @@
     "aws-sdk": "^2.481.0",
     "graphql": "^14.3.1",
     "lambda-log": "^2.3.0",
-    "lodash": "^4.17.11"
-  }
+    "lodash": "^4.17.11",
+    "snyk": "^1.190.0"
+  },
+  "snyk": true
 }
