@@ -16,7 +16,7 @@
   "author": "Rishikesh Darandale",
   "license": "MIT",
   "devDependencies": {
-    "serverless": "^1.48.0",
+    "serverless": "^1.48.2",
     "serverless-dynamodb-local": "^0.2.38",
     "serverless-offline": "^5.8.0",
     "serverless-webpack": "^5.3.1",
